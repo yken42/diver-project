@@ -26,7 +26,6 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    console.log("Email: ", email, "Password: ", user.password)
     if (!user) {
       return res.status(401).json({ error: "Authentication failed" });
     }
@@ -45,4 +44,17 @@ export const login = async (req, res) => {
 
 export const protcetedRoute = (req, res) => {
     res.status(200).json({ message: 'protected route access' });
+}
+
+export const findUserByEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const name = User.find({ email });
+    if(!name){
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(201).json(name.name);
+  } catch (error) {
+    return res.status(500).json({ message: "something went wrong", error: error.message });
+  }
 }
