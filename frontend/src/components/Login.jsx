@@ -6,25 +6,35 @@ export const Login = () => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [token, setToken] = useState("");
+    const [name, setName] = useState("");
 
     const handleLogin = async (e) => {
         e.preventDefault();
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:3000/api/auth/login",{
-                email,
-                password
-            })
-            console.log(response)
-            const { token, name } = response.data;
-            localStorage.setItem("jwtToken", token);
-            setToken(token);
-            console.log("Login Successful")
+            await axios.post("http://localhost:3000/api/auth/login", {
+                email, password
+            }).then((response) => {
+                console.log(response);
+                const { token, name } = response.data;
+                localStorage.setItem("jwtToken", token);
+                setToken(token);
+                setName(name);
+                console.log("Login successful")
+            })      
         } catch (error) {
             console.error(error);
-            setError(error.response?.data?.error || "Login failed");
+             setError(error.response?.data?.error || "Login failed");
         }
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem("jwtToken");
+        setToken("");
+        setName("");
+        setEmail("");
+        setPassword("");
     }
 
   return (
@@ -52,7 +62,9 @@ export const Login = () => {
         <button type="submit">Login</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      {token && <p style={{ color: "green" }}>authorized!</p>}
+      {token && <p style={{ color: "green" }}>Welcome {name}</p>}
+
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 }
