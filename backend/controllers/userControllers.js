@@ -8,7 +8,7 @@ export const signup = async (req, res) => {
       const { email, password, name } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
-      email,
+      email: email.toLowerCase(),
       password: hashedPassword,
       name
     });
@@ -22,19 +22,20 @@ export const signup = async (req, res) => {
   }
 };
 
+// LOGIN USER
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ error: "Authentication failed" });
+      return res.status(404).json({ error: "User not found" });
     }
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
-      return res.status(401).json({ error: "Authentication failed" });
+      return res.status(401).json({ error: "Password incorrect, try again later..." });
     }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+        expiresIn: process.env.TOKEN_EXPIRES,
     });
     res.status(200).json({ token, name: user.name });
   } catch (error) {
@@ -46,6 +47,7 @@ export const protcetedRoute = (req, res) => {
     res.status(200).json({ message: 'protected route access' });
 }
 
+// FIND USER BY EMAIL
 export const findUserByEmail = async (req, res) => {
   try {
     const { email } = req.body;
