@@ -36,8 +36,8 @@ export const Login = () => {
   return (
     <div>
       <div className="w-full my-16">
-        <h1 className="w-fit mx-auto text-5xl">Welcome</h1>
-        <h2 className="w-fit mx-auto text-xl">Sign in to continue</h2>
+        <h1 className="w-fit mx-auto text-5xl">ברוך הבא</h1>
+        <h2 className="w-fit mx-auto text-xl">יש להתחבר על מנת להמשיך</h2>
       </div>
       <form onSubmit={handleLogin}>
         <Box
@@ -49,7 +49,7 @@ export const Login = () => {
           <TextField
             id="standard-basic"
             className="w-full text-2xl"
-            label="Email"
+            label="אימייל"
             variant="standard"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -59,29 +59,28 @@ export const Login = () => {
           <TextField
             id="password"
             className="w-full text-2xl"
-            label="Password"
+            label="סיסמה"
             variant="standard"
-            type='password'
+            type="password"
             // type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
+          {error && <p style={{ color: "red" }}>{error}</p>}
         </Box>
         <div className="login-btn w-2/3 mx-auto mt-12">
           <Button
             variant="contained"
             sx={{
-                backgroundColor: '#5DCC53',
-                '&:hover': {
-                  backgroundColor: 'darkgreen',
-                },
-              }}
+              backgroundColor: "#5DCC53",
+              "&:hover": {
+                backgroundColor: "darkgreen",
+              },
+            }}
             className="w-full"
             type="submit"
           >
-            Login
+            התחבר
           </Button>
         </div>
         <div className="login-btn w-2/3 mx-auto mt-8">
@@ -89,13 +88,14 @@ export const Login = () => {
             variant="contained"
             className="w-full"
             sx={{
-                backgroundColor: '#EF5E5F',
-                '&:hover': {
-                  backgroundColor: 'darkred',
-                },
-              }}
+              backgroundColor: "#EF5E5F",
+              "&:hover": {
+                backgroundColor: "darkred",
+              },
+            }}
+            onClick={() => navigate("/signup")}
           >
-            Create Acount
+            הרשמה{" "}
           </Button>
         </div>
       </form>

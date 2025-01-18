@@ -2,6 +2,7 @@ import express, { json } from 'express';
 import connectDB from './db/connect.js';
 import 'dotenv/config';
 import userRoute from './routes/userRoutes.js';
+import reservationRouter from './routes/reservationRoutes.js';
 import cors from 'cors';
 
 const app = express();
@@ -11,6 +12,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 app.use('/api/auth', userRoute);
+app.use('/api/reservation', reservationRouter);
 
 app.listen(PORT, () => {
     console.log(`app is running on localhost:${PORT}`);

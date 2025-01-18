@@ -26,6 +26,9 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    if(!email || !password){
+      return res.status(401).json({ error: "All fields are required"})
+    }
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ error: "User not found" });
@@ -37,6 +40,7 @@ export const login = async (req, res) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.TOKEN_EXPIRES,
     });
+    
     res.status(200).json({ token, name: user.name });
   } catch (error) {
     res.status(500).json({ error: "Login failed", message: error.message });
