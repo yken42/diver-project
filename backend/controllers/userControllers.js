@@ -5,16 +5,22 @@ import jwt from 'jsonwebtoken'
 // CREATE USER
 export const signup = async (req, res) => {
     try {
-      const { email, password, name } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      name
-    });
+      const { username, password, name } = req.body;
+      const existingUser = await User.findOne({ username: username.toLowerCase() });
+      if(existingUser){
+        return res.status(409).json({ error: "שם משתמש זה כבר קיים" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const user = new User({
+        username: username.toLowerCase(),
+        password: hashedPassword,
+        name,
+      });
 
     await user.save();
-    return res.status(201).json({ message: "User registered succesfully" });
+    return res.status(201).json({ message: "משתמש נוצר בהצלחה" });
   } catch (error) {
     return res
       .status(401)
@@ -25,18 +31,18 @@ export const signup = async (req, res) => {
 // LOGIN USER
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if(!email || !password){
-      return res.status(401).json({ error: "All fields are required"})
+    const { username, password } = req.body;
+    if(!username || !password){
+      return res.status(401).json({ error: "יש למלא את כל השדות"})
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: "שם משתמש או סיסמה שגוים, נסה שנית" });
     }
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Password incorrect, try again later..." });
-    }
+    // const passwordMatch = await bcrypt.compare(password, user.password);
+    // if (!passwordMatch) {
+    //   return res.status(401).json({ error: "Password incorrect, try again later..." });
+    // }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.TOKEN_EXPIRES,
     });
@@ -54,8 +60,8 @@ export const protcetedRoute = (req, res) => {
 // FIND USER BY EMAIL
 export const findUserByEmail = async (req, res) => {
   try {
-    const { email } = req.body;
-    const name = User.find({ email });
+    const { username } = req.body;
+    const name = await User.find({ username });
     if(!name){
       return res.status(404).json({ message: "User not found" });
     }

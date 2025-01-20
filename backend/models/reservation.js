@@ -13,10 +13,10 @@ const reservationSchema = new Schema({
 });
 
 reservationSchema.pre('save', function (next) {
-    // Ensure the date is in YYYY-MM-DD format by truncating the time part
-    this.date = new Date(this.date.toISOString().split('T')[0]); 
-    next();
-  });
+  // Ensure the date is in YYYY-MM-DD format by truncating the time part
+  this.date = new Date(this.date.toISOString().split('T')[0]); 
+  next();
+});
 
 const Reservation = model('Reservation', reservationSchema);
 export default Reservation;

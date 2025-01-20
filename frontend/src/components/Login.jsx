@@ -5,7 +5,7 @@ import { Box, TextField } from "@mui/material";
 import Button from '@mui/material/Button';
 
 export const Login = () => {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ export const Login = () => {
 
         try {
             await axios.post("http://localhost:3000/api/auth/login", {
-                email: email.toLowerCase(), password
+                username: username.toLowerCase(), password
             }).then((response) => {
                 console.log(response);
                 const { token, name } = response.data;
@@ -49,10 +49,10 @@ export const Login = () => {
           <TextField
             id="standard-basic"
             className="w-full text-2xl"
-            label="אימייל"
+            label="שם משתמש"
             variant="standard"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </Box>
         <Box className="w-2/3 mx-auto mt-4">
