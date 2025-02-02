@@ -18,7 +18,10 @@ export const Login = () => {
         try {
             await axios.post("http://localhost:3000/api/auth/login", {
                 username: username.toLowerCase(), password
-            }).then((response) => {
+            },
+          {
+            withCredentials: true,
+          }).then((response) => {
                 console.log(response);
                 const { token, name } = response.data;
                 localStorage.setItem("jwtToken", token);
@@ -41,7 +44,6 @@ export const Login = () => {
       </div>
       <form onSubmit={handleLogin}>
         <Box
-          component="form"
           className="w-2/3 mx-auto"
           noValidate
           autoComplete="off"

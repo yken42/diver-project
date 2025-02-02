@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Box, TextField } from "@mui/material";
+import { Navigate, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 
@@ -9,6 +10,7 @@ export const Signup = () => {
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -26,6 +28,7 @@ export const Signup = () => {
           setPassword("");
           setName("");
           
+          navigate('/login')
         });
     } catch (error) {
       console.error(error);
